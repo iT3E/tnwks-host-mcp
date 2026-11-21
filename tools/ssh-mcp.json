@@ -1,0 +1,20 @@
+{
+  "image": "ssh-mcp v2.26.0, commit e31e99b9184ba6b3dd7b65ceb717c7620ddbd828",
+  "tools": [
+    "close-session",
+    "list-connections",
+    "list-sessions",
+    "open-session",
+    "privileged-command",
+    "read-command",
+    "read-session-output",
+    "reload-config",
+    "run-command",
+    "sftp-download",
+    "sftp-download-file",
+    "sftp-list",
+    "sftp-upload",
+    "sftp-upload-file",
+    "signal-process"
+  ]
+}

@@ -7,9 +7,13 @@ tnwks-ops is the reference for anything not covered there.
 
 ## What this is
 
-A Python app. CI builds the image `ghcr.io/it3e/<this repo>`,
-which is public. Describe it here (what it does, where it is deployed from in
-tnwks-ops); `copier update` keeps local edits to this file.
+The image of the host server of the tnwks agent platform: the upstream
+`ssh-mcp` at a pinned tag and commit, built with no change of code
+(`README.md`). The Python part is the image test only. CI builds the image
+`ghcr.io/it3e/<this repo>`, which is public, and pushes it on release tags
+only. tnwks-ops deploys it, one pod at each site, behind the central MCP
+gateway. Never change the code of the upstream server here: a change of
+the image is a change of `UPSTREAM_COMMIT`, the base digest or the tests.
 
 ## Change workflow
 
