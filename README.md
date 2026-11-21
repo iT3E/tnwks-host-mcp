@@ -43,6 +43,9 @@ proven as the default user of the image only; the rights on the mounted
 key and config at uid 65532 are a matter of the pod in tnwks-ops. Its
 one target is a fake host (`tests/sshd`) with a normal user, on an internal
 network. The keys and the token are made for the run and deleted after it.
+Root in a helper container with no network makes the keys and gives them
+to the runner's uid, so the test needs no passwd entry for that uid and
+passes under any uid of the runner.
 It checks:
 
 - the image is the upstream tag and commit, and its default user is uid

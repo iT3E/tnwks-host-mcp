@@ -85,43 +85,36 @@ class ImageTest(unittest.TestCase):
         cls.net = f"host-mcp-test-{TAG}"
         cls.sshd_image = f"host-mcp-test-sshd:{TAG}"
         keys = cls.tmp / "keys"
-        keys.mkdir(mode=0o700)
+        keys.mkdir()
+        # sshd reads the authorized key as the user agent of the fake host,
+        # whose uid is not the runner's: the folder lets each user through,
+        # the public keys are 0644, and the private keys stay 0600 for the
+        # runner's uid (the server) and root (the host key of the fake host).
+        keys.chmod(0o711)
         docker("build", "-q", "-t", cls.sshd_image, str(HERE / "sshd"))
-        for key in ("agent_ed25519", "host_ed25519"):
-            docker(
-                "run",
-                "--rm",
-                "--network",
-                "none",
-                "--user",
-                UID,
-                "-v",
-                f"{keys}:/k",
-                cls.sshd_image,
-                "ssh-keygen",
-                "-q",
-                "-t",
-                "ed25519",
-                "-N",
-                "",
-                "-C",
-                "test",
-                "-f",
-                f"/k/{key}",
-            )
+        # ssh-keygen stops for a uid with no passwd entry, and the runner's
+        # uid has none in the image. So root in a container with no network
+        # makes the keys, gives them to the runner's uid, and prints the
+        # fingerprint of the host key. Each later step that mounts them runs
+        # as the runner's uid (the server) or as root (the fake host), and
+        # the runner can delete each file.
         line = docker(
             "run",
             "--rm",
             "--network",
             "none",
-            "--user",
-            UID,
+            "-e",
+            f"OWNER={UID}",
             "-v",
-            f"{keys}:/k:ro",
+            f"{keys}:/k",
             cls.sshd_image,
-            "ssh-keygen",
-            "-lf",
-            "/k/host_ed25519.pub",
+            "sh",
+            "-ec",
+            "for k in agent_ed25519 host_ed25519; do"
+            ' ssh-keygen -q -t ed25519 -N "" -C test -f "/k/$k"; done;'
+            ' chown "$OWNER" /k/*; chmod 600 /k/agent_ed25519 /k/host_ed25519;'
+            " chmod 644 /k/agent_ed25519.pub /k/host_ed25519.pub;"
+            " ssh-keygen -lf /k/host_ed25519.pub",
         ).stdout
         cls.fingerprint = line.split()[1]
         assert cls.fingerprint.startswith("SHA256:"), "no fingerprint"
@@ -139,7 +132,8 @@ class ImageTest(unittest.TestCase):
             docker("rm", "-f", name, check=False)
         docker("network", "rm", cls.net, check=False)
         docker("image", "rm", "-f", cls.sshd_image, check=False)
-        shutil.rmtree(cls.tmp, ignore_errors=True)
+        # Each file is the runner's, so this leaves nothing; a failure shows.
+        shutil.rmtree(cls.tmp)
 
     @classmethod
     def run_container(cls, alias, *args):
