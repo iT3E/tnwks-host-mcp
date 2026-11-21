@@ -1,0 +1,14 @@
+Port 22
+HostKey /keys/host_ed25519
+AuthorizedKeysFile /keys/agent_ed25519.pub
+# The keys are bind mounts of the test, owned by the user that runs it.
+StrictModes no
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PubkeyAuthentication yes
+AllowUsers agent
+AllowTcpForwarding no
+X11Forwarding no
+LogLevel VERBOSE
+Subsystem sftp internal-sftp
