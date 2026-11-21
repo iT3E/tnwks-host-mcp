@@ -1,3 +1,0 @@
-kind: Added
-body: 'The image of the host server: the upstream ssh-mcp at tag v2.26.0, built from its commit with the steps of its own Dockerfile and no change of code, and its test against a fake host (bearer token, allowed hosts, the pinned tool list, a read as a normal user, a strict host key)'
-time: 2026-11-21T22:20:00.000000+00:00
