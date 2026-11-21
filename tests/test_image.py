@@ -1,10 +1,12 @@
 """The test of the image (README.md, "Tests"). Python standard library and
 the Docker CLI only. IMAGE_REF names the image.
 
-The server runs as in its pod: HTTP mode with a bearer token, its own
-approval off, a strict host key, and a read-only root file system with no
-capability. Its one target is a fake host (tests/sshd) with a normal user,
-on an internal Docker network. The keys and the token are made at the start
+The server runs with the flags of its pod: HTTP mode with a bearer token,
+its own approval off, a strict host key, and a read-only root file system
+with no capability. It runs as the uid of the runner, which owns the test
+config and key; uid 65532 is checked as the default user of the image.
+Its one target is a fake host (tests/sshd) with a normal user, on an
+internal Docker network. The keys and the token are made at the start
 of the test and deleted at its end; none is in git. The calls go from a
 Python container (tests/client.py) on the same network.
 """
@@ -242,7 +244,7 @@ class ImageTest(unittest.TestCase):
         (result,) = out["results"]
         return json.dumps(result["body"])
 
-    def test_the_image_is_the_upstream_tag_and_runs_as_65532(self):
+    def test_the_image_is_the_upstream_tag_and_its_default_user_is_65532(self):
         labels = json.loads(
             docker(
                 "image", "inspect", IMAGE, "--format", "{{json .Config.Labels}}"

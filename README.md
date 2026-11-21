@@ -21,22 +21,32 @@ pins the digest.
 - **Nothing secret.** No key, token, host key or config is in the image.
   The pod mounts the SSH key of the agent account and the config, and
   gives the bearer token of the HTTP mode.
-- **A new upstream release.** Renovate does not follow the upstream tag.
-  A person reads the change, sets `UPSTREAM_COMMIT` to the full commit of
-  the new tag, updates the base digest as upstream does, and updates
-  `tools/ssh-mcp.json` from the image. Then the tests run.
+- **The base digest.** The Renovate presets of the template follow each
+  `FROM` line with a digest, so Renovate opens the updates of the
+  `node:22-slim` digest by itself. The image test is the gate: an update
+  merges only when it passes.
+- **A new upstream release.** Renovate does not follow the upstream tag. A
+  person reads the change, sets `UPSTREAM_COMMIT` to the full commit of the
+  new tag, and updates `tools/ssh-mcp.json` from the image. Then the tests
+  run. A Renovate regex manager for `UPSTREAM_COMMIT` is a later step, not
+  built here.
 
 ## Tests
 
 `bin/image-test <image>` (CI runs it on each built image before any push)
 runs `tests/test_image.py` with Docker and python3 only. It starts the
-server as in its pod: HTTP mode with a bearer token, its own approval off,
-`--hostKeyMode=strict` with a pinned host key, and a read-only root. Its
+server with the flags of its pod: HTTP mode with a bearer token, its own
+approval off, `--hostKeyMode=strict` with a pinned host key, and a
+read-only root with no capability. It runs the server as the uid of the
+runner, because the runner owns the test config and key. So uid 65532 is
+proven as the default user of the image only; the rights on the mounted
+key and config at uid 65532 are a matter of the pod in tnwks-ops. Its
 one target is a fake host (`tests/sshd`) with a normal user, on an internal
 network. The keys and the token are made for the run and deleted after it.
 It checks:
 
-- the image is the upstream tag and commit, and runs as uid 65532;
+- the image is the upstream tag and commit, and its default user is uid
+  65532;
 - a call with no token or another token gets 401;
 - a Host header outside `--allowedHosts` gets 403;
 - the server lists the tools of `tools/ssh-mcp.json`, no more and no less;
