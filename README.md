@@ -2,7 +2,7 @@
 
 The image of the host server of the tnwks agent platform: the upstream MCP
 server [`ssh-mcp`](https://github.com/tufantunc/ssh-mcp) (MIT) at its tag
-`v2.26.0`, built from that commit with the steps of its own Dockerfile and
+`v2.27.1`, built from that commit with the steps of its own Dockerfile and
 no change of code. The project publishes a Dockerfile and no image, so this
 repo builds it, tests it and publishes it on its release tags; tnwks-ops
 pins the digest.

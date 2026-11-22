@@ -29,7 +29,7 @@ CLIENT_IMAGE = os.environ.get(
 )
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-UPSTREAM_COMMIT = "e31e99b9184ba6b3dd7b65ceb717c7620ddbd828"
+UPSTREAM_COMMIT = "69cb01f67d8f29a23f51d058271ba7a36b2e4036"
 TAG = uuid.uuid4().hex[:8]
 UID = f"{os.getuid()}:{os.getgid()}"
 HARDENED = [
@@ -245,7 +245,7 @@ class ImageTest(unittest.TestCase):
             ).stdout
         )
         self.assertEqual(labels["io.github.tnwks.upstream.revision"], UPSTREAM_COMMIT)
-        self.assertEqual(labels["io.github.tnwks.upstream.version"], "v2.26.0")
+        self.assertEqual(labels["io.github.tnwks.upstream.version"], "v2.27.1")
         run = docker(
             "run",
             "--rm",
@@ -257,7 +257,7 @@ class ImageTest(unittest.TestCase):
             "-p",
             "const p = require('/app/package.json'); [process.getuid(), p.name, p.version].join(' ')",
         )
-        self.assertEqual(run.stdout.strip(), "65532 ssh-mcp 2.26.0")
+        self.assertEqual(run.stdout.strip(), "65532 ssh-mcp 2.27.1")
         self.assertIn(
             "MIT",
             docker(
