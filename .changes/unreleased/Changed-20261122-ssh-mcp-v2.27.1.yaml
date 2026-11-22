@@ -1,0 +1,3 @@
+kind: Changed
+body: 'The image builds the upstream ssh-mcp at tag v2.27.1. Upstream changed the command classifier only: commands inside the shell grammar, behind interpreter options and in split filters get the class of what they run, which closes two published advisories. The tool list, the tool schemas, the config, the audit log and the SSH handling did not change'
+time: 2026-11-22T13:00:00.000000+00:00

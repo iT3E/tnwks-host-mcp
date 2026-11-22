@@ -1,5 +1,5 @@
 # The host server of the tnwks agent platform: the upstream server ssh-mcp
-# at its tag v2.26.0, built from its source with the steps of its own
+# at its tag v2.27.1, built from its source with the steps of its own
 # Dockerfile and no change of code (Design Doc of effort 0003, section
 # 4.2.6, "The host server"). No key, token or config is in the image: the
 # pod mounts them at run time.
@@ -8,7 +8,7 @@
 # tag, so the build gets those bytes or fails. The two stages below are the
 # stages of the upstream Dockerfile at that commit, with the same base
 # pinned by digest; only the COPY sources name the source stage.
-ARG UPSTREAM_COMMIT=e31e99b9184ba6b3dd7b65ceb717c7620ddbd828
+ARG UPSTREAM_COMMIT=69cb01f67d8f29a23f51d058271ba7a36b2e4036
 
 FROM scratch AS source
 ARG UPSTREAM_COMMIT
@@ -29,13 +29,13 @@ ARG UPSTREAM_COMMIT
 ARG VERSION=dev
 ARG REVISION=unknown
 LABEL org.opencontainers.image.title="tnwks-host-mcp" \
-      org.opencontainers.image.description="The ssh-mcp server v2.26.0, built from its tag with no change of code" \
+      org.opencontainers.image.description="The ssh-mcp server v2.27.1, built from its tag with no change of code" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.revision="${REVISION}" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.base.name="docker.io/library/node:22-slim" \
       io.github.tnwks.upstream.source="https://github.com/tufantunc/ssh-mcp" \
-      io.github.tnwks.upstream.version="v2.26.0" \
+      io.github.tnwks.upstream.version="v2.27.1" \
       io.github.tnwks.upstream.revision="${UPSTREAM_COMMIT}"
 WORKDIR /app
 

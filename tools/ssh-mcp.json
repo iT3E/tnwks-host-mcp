@@ -1,5 +1,5 @@
 {
-  "image": "ssh-mcp v2.26.0, commit e31e99b9184ba6b3dd7b65ceb717c7620ddbd828",
+  "image": "ssh-mcp v2.27.1, commit 69cb01f67d8f29a23f51d058271ba7a36b2e4036",
   "tools": [
     "close-session",
     "list-connections",
