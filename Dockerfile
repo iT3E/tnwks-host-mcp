@@ -14,7 +14,7 @@ FROM scratch AS source
 ARG UPSTREAM_COMMIT
 ADD --keep-git-dir=false https://github.com/tufantunc/ssh-mcp.git#${UPSTREAM_COMMIT} /
 
-FROM node:22-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c AS builder
+FROM node:22-slim@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee AS builder
 WORKDIR /app
 COPY --from=source /package.json /package-lock.json ./
 # As upstream: the prepare script needs the sources, and the build runs
@@ -24,7 +24,7 @@ COPY --from=source /tsconfig.json ./
 COPY --from=source /src/ ./src/
 RUN npm run build
 
-FROM node:22-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c
+FROM node:22-slim@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
 ARG UPSTREAM_COMMIT
 ARG VERSION=dev
 ARG REVISION=unknown
