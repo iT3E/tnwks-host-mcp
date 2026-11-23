@@ -3,6 +3,12 @@
 Notable changes to this repository, newest first. Each PR adds a Changie
 fragment under `.changes/unreleased/`; merging to `main` releases them.
 
+## v0.2.1 - 2026-11-23
+
+### Fixed
+
+* Dependency updates: chore(container): update image node to e9f565d (#5)
+
 ## v0.2.0 - 2026-11-22
 
 ### Changed
